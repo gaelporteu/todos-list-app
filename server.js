@@ -35,25 +35,40 @@ app.use(express.static('public')) // middleware
 app.use(express.urlencoded({ extended: true })) // middleware
 // middleware in express parses incoming requests with JSON payloads and is based on body-parser -> not sure what all this means
 app.use(express.json()) // middleware
+
+app.get("/", async (req, res) => {
+    try {
+      const todoItems = await db.collection("todos").find().toArray();
+      const itemsLeft = await db
+        .collection("todos")
+        .countDocuments({ completed: false });
+      res.render("index.ejs", { zebra: todoItems, left: itemsLeft });
+    } catch (err) {
+      console.error(err);
+      res.send('Sorry, there was an error');
+    }
+  });
+
 // express routing is how a server responds to clients requests
-app.get('/', async (req, res) => {
-    // this will put the todos in the db into an array
-    const todoItems = await db.collection('todos').find().toArray()
-    // this adds counts how many 'completed: false' items are in the database
-    const itemsLeft = await db.collection('todos').countDocuments(
-    {completed: false})
-    // tell put how many 'completed: false' items there are in the db into index.ejs file and render it to the browser
-    res.render('index.ejs', {zebra: todoItems, left: itemsLeft})
+// app.get('/', async (req, res) => {
+//     // this will put the todos in the db into an array
+//     const todoItems = await db.collection('todos').find().toArray()
+//     // this adds counts how many 'completed: false' items are in the database
+//     const itemsLeft = await db.collection('todos').countDocuments(
+//     {completed: false})
+//     // tell put how many 'completed: false' items there are in the db into index.ejs file and render it to the browser
+//     res.render('index.ejs', {zebra: todoItems, left: itemsLeft})
     
-    // deprecated code used async await instead
-    // db.collection('todos').find().toArray()
-    // .then(data => {
-    //     db.collection('todos').countDocuments({completed: false})
-    //     .then(itemsLeft => {
-    //         res.render('index.js', {zebra: data, left: itemsLeft})
-    //     })
-    // })
-})
+//     // deprecated code used async await instead
+//     // db.collection('todos').find().toArray()
+//     // .then(data => {
+//     //     db.collection('todos').countDocuments({completed: false})
+//     //     .then(itemsLeft => {
+//     //         res.render('index.js', {zebra: data, left: itemsLeft})
+//     //     })
+//     // })
+// })
+
 // this creates an item and puts it into the db
 app.post('/createTodo', (req, res) => {
     // console.log(todo: req.body) // this will give us what is sent to the db
