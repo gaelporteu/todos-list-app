@@ -1,8 +1,6 @@
-// alert(`Js is working!`)
-
 const deleteBtn = document.querySelectorAll('.del');
-const todoItem = document.querySelectorAll('.todoItem span')
-const todoComplete = document.querySelectorAll('.todoItem span.completed')
+const todoItem = document.querySelectorAll('.todoItem span');
+const todoComplete = document.querySelectorAll('.todoItem span.completed');
 
 Array.from(deleteBtn).forEach((el) => {
     el.addEventListener('click', deleteTodo)
@@ -17,7 +15,7 @@ Array.from(todoComplete).forEach((el) => {
 })
 
 async function deleteTodo() {
-    const todoText = this.parentNode.childNode[1].innerText
+    const todoText = this.parentNode.childNodes[1].innerText
     try{
         const response = await fetch('deleteTodo', {
             method: 'delete',
@@ -36,7 +34,7 @@ async function deleteTodo() {
 
 
 async function markComplete() {
-    const todoText = this.parentNode.childNode[1].innerText
+    const todoText = this.parentNode.childNodes[1].innerText
     try{
         const response = await fetch('markComplete', {
             method: 'put',
@@ -54,7 +52,7 @@ async function markComplete() {
 }
 
 async function undo() {
-    const todoText = this.parentNode.childNode[1].innerText
+    const todoText = this.parentNode.childNodes[1].innerText
     try{
         const response = await fetch('undo', {
             method: 'put',
